@@ -1,0 +1,142 @@
+/* Cards */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.04);
+}
+
+/* Page header */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.titles .title { margin: 0; }
+.titles .subtitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.titles .subtitle .muted { opacity: .7; font-size: 13px; }
+.titles .subtitle .dot {
+  width: 4px; height: 4px; border-radius: 50%; background: var(--border);
+}
+
+/* Profile summary */
+.profile-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; }
+.avatar-wrap { display: grid; place-items: center; margin-top: 4px; }
+.avatar {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.avatar img, .avatar-fallback {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 32px;
+  background: var(--panel);
+}
+.avatar-upload {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: transform .12s ease;
+  z-index: 2;
+}
+.avatar-upload:hover { transform: scale(1.05); }
+.avatar-upload input { display: none; }
+
+.profile-meta .name { font-weight: 600; font-size: 18px; }
+.profile-meta .username { opacity: .7; font-size: 13px; }
+
+.meta-list { width: 100%; margin-top: 8px; display: flex; flex-direction: column; gap: 8px; }
+.meta-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.meta-row .label { opacity: .8; font-size: 12px; }
+.meta-row .value { font-size: 14px; }
+.chip {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 12px;
+}
+.chip.success { background: rgba(64,160,43,.08); border-color: rgba(64,160,43,.35); }
+.chip.warn { background: rgba(231,76,60,.08); border-color: rgba(231,76,60,.35); }
+.link { background: transparent; border: none; color: var(--icon-active); cursor: pointer; font-size: 12px; }
+.link:hover { text-decoration: underline; }
+.info { color: var(--color-text-secondary); font-size: 12px; margin-top: 4px; }
+.error { color: var(--state-rejected); font-size: 12px; margin-top: 4px; }
+
+/* Form */
+.form-card { position: relative; max-width: 100%; overflow: hidden; }
+.form-title { margin: 0 0 10px; font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Stack avatar + form on the left */
+.profile-stack { display: grid; gap: 12px; }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field.span-2 { grid-column: span 2; }
+.field label { font-size: 12px; opacity: .85; }
+.input {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color .12s ease, box-shadow .12s ease;
+}
+.input:focus { border-color: var(--primary, #4f46e5); box-shadow: 0 0 0 3px rgba(79,70,229,.15); }
+.input.readonly { opacity: .8; }
+.clamp { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.actions { margin-top: 16px; display: flex; justify-content: flex-end; }
+
+@media (max-width: 767px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .field.span-2 { grid-column: auto; }
+}
+
+/* Settings */
+.settings-card .field select {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--fg);
+  border-radius: 8px;
+}
+.profile-container { display: contents; }
+
+/* Copyright footer on profile page */
+.profile-copyright {
+  /* spinta in basso il piu' possibile */
+  position: sticky;
+  bottom: 8px;
+  margin: 32px 0 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+.profile-copyright .sep { margin: 0 6px; opacity: .6; }
+.profile-copyright a { color: var(--icon-active); text-decoration: none; }
+.profile-copyright a:hover { text-decoration: underline; }

@@ -39,8 +39,8 @@ services:
 
   backend:
     build:
-      context: ./be
-      dockerfile: Dockerfile
+      context: ./backend
+      dockerfile: dockerfile
     container_name: app_backend
     restart: always
     depends_on: {}
@@ -72,8 +72,8 @@ services:
 
   frontend:
     build:
-      context: ./fe
-      dockerfile: Dockerfile
+      context: ./frontend
+      dockerfile: dockerfile
     container_name: app_frontend
     restart: always
     depends_on:

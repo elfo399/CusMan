@@ -1,0 +1,15 @@
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Runtime data and database exports
+backups/
+
+# JS/Angular build artifacts
+node_modules/
+dist/
+.angular/
+coverage/
+
+.DS_Store
