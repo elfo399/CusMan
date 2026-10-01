@@ -12,12 +12,13 @@ services:
       MYSQL_PASSWORD: apppass
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./sql/init:/docker-entrypoint-initdb.d:ro
     ports:
       - "3307:3306"   # ⚠️ solo per debug, chiudi in produzione
     networks:
-      - internal_net
+      - default
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-prootpass"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,7 +29,7 @@ services:
     container_name: app_redis
     restart: always
     networks:
-      - internal_net
+      - default
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -37,14 +38,12 @@ services:
       start_period: 10s
 
   backend:
-    build: ./backend
+    build:
+      context: ./be
+      dockerfile: Dockerfile
     container_name: app_backend
     restart: always
-    depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+    depends_on: {}
     environment:
       DB_HOST: mysql
       DB_PORT: 3306
@@ -54,24 +53,35 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       PORT: 3000
+      KEYCLOAK_URL: http://idp:8080
+      KEYCLOAK_REALM: cusman
+      KEYCLOAK_ADMIN_USERNAME: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      GOOGLE_PLACES_KEY: ${GOOGLE_PLACES_KEY}
+      HUNTER_KEY: ${HUNTER_KEY}
+    ports:
+      - "3000:3000"
     networks:
-      - internal_net
-      - proxyManager
+      - default
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/health').then(()=>process.exit(0)).catch(()=>process.exit(1))\""]
       interval: 15s
       timeout: 5s
       retries: 5
       start_period: 20s
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./fe
+      dockerfile: Dockerfile
     container_name: app_frontend
     restart: always
     depends_on:
       - backend
     networks:
-      - proxyManager
+      - default
+    ports:
+      - "8080:80"
     # Angular servito da Nginx (vedi Dockerfile)
 
   idp:
@@ -80,6 +90,7 @@ services:
     restart: always
     command:
       - start-dev
+      - --import-realm
     environment:
       # Config base
       KEYCLOAK_ADMIN: admin
@@ -88,7 +99,7 @@ services:
       # Config porta e hostname
       KC_HTTP_PORT: 8080
       KC_HOSTNAME_STRICT: false
-      KC_HOSTNAME_URL: https://idp.tuodominio.dev
+      KC_HOSTNAME_URL: http://localhost:8081
 
       # Config DB persistente su MySQL
       KC_DB: mysql
@@ -101,17 +112,19 @@ services:
       mysql:
         condition: service_healthy
     networks:
-      - proxyManager
-      - internal_net
+      - default
     volumes:
       - keycloak_data:/opt/keycloak/data
+      - ./keycloak/themes:/opt/keycloak/themes:ro
+      - ./keycloak/realm-cusman.json:/opt/keycloak/data/import/realm-cusman.json:ro
+    ports:
+      - "8081:8080"
 
 volumes:
   mysql_data:
   keycloak_data:
 
 networks:
-  internal_net:
-    internal: true
-  proxyManager:
-    external: true
+  default:
+    name: infracusman_net
+

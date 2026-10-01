@@ -1,0 +1,663 @@
+﻿/* Dark theme aligned to app look (keeps brand colors) */
+:root {
+  --bg: #0f172a;              /* slate-900 */
+  --panel: #1e293b;           /* slate-800 */
+  --panel-ghost: rgba(30,41,59,.75);
+  --border: #334155;          /* slate-700 */
+  --text: #f1f5f9;            /* slate-50 */
+  --muted: #94a3b8;           /* slate-400 */
+  --primary: #3b82f6;         /* brand blue */
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+/* Background gradient similar to the mockup but in app hues */
+html, body {
+  background:
+    radial-gradient(900px 500px at 15% 0%, rgba(59,130,246,.15), transparent 60%),
+    radial-gradient(900px 500px at 85% 0%, rgba(168,85,247,.12), transparent 60%),
+    linear-gradient(180deg, rgba(2,6,23,.0), rgba(2,6,23,.0)),
+    var(--bg) !important;
+  color: var(--text) !important;
+  color-scheme: dark;
+}
+
+/* Center container */
+.pf-c-login, .pf-v5-c-login { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+
+/* Card container to mimic the rounded floating panel */
+.pf-c-login__container, .pf-v5-c-login__container, .pf-v5-c-card {
+  width: min(560px, 92vw);
+  background: var(--panel-ghost);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border-radius: 18px;
+  border: 1px solid rgba(148,163,184,.25);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* Head with circular icon (from placeholder.svg) */
+/* Let the container header follow default spacing; we add our own card title */
+.pf-c-login__main-header, .pf-v5-c-login__header { text-align: center; margin: 0 0 8px 0; }
+.pf-c-login__main-header::before, .pf-v5-c-login__header::before {
+  content: '';
+  display: inline-block;
+  width: 70px; height: 70px;
+  border-radius: 999px;
+  background:
+    radial-gradient(120% 120% at 30% 10%, rgba(255,255,255,.18), rgba(255,255,255,.05) 60%),
+    var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  margin: 18px 0 6px 0;
+  position: relative;
+}
+.pf-c-login__main-header::after, .pf-v5-c-login__header::after {
+  content: '';
+  position: absolute;
+  width: 70px; height: 70px; left: 50%; transform: translateX(-50%);
+  background: url('../img/brand.svg') no-repeat center/44px auto;
+  margin-top: 18px;
+  /* Forza il logo a renderizzare bianco indipendentemente dal fill SVG */
+  filter: brightness(0) invert(1);
+}
+
+/* Titles */
+.pf-c-title, .pf-v5-c-title { color: var(--text) !important; font-weight: 800; letter-spacing: -.2px; font-size: 26px; margin-top: 0 !important; }
+
+/* Inputs styled like the mock (rounded, darker inner panel) */
+.pf-c-form__label, .pf-v5-c-form__label { color: var(--text) !important; font-weight: 600; }
+.pf-c-form-control,
+.pf-v5-c-text-input-group__text-input,
+.pf-v5-c-form-control,
+input[type="text"], input[type="email"], input[type="password"] {
+  background: #0b1220 !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 12px !important;
+  height: 48px !important;
+  box-shadow: none !important;         /* rimuove la riga blu inferiore di PF */
+  outline: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  background-clip: padding-box !important;
+}
+.pf-c-form-control::placeholder,
+.pf-v5-c-text-input-group__text-input::placeholder,
+.pf-v5-c-form-control::placeholder { color: #7c8aa2; }
+
+/* Input icons (email / lock) */
+input#username, input[name="username"], input[name="email"], input[type="text"][name="login"], input#password, input[name="password"] {
+  padding-left: 44px !important;
+  background-position: 14px center;
+  background-repeat: no-repeat;
+  background-size: 18px 18px;
+}
+input#username, input[name="username"], input[name="email"], input[type="text"][name="login"] { background-image: url('../img/email.svg'); }
+input#password, input[name="password"] { background-image: url('../img/lock.svg'); }
+
+/* Focus ring */
+.pf-c-form-control:focus,
+.pf-v5-c-form-control:focus,
+.pf-v5-c-text-input-group__text-input:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.25) !important; /* anello morbido */
+  outline: none !important;
+}
+
+/* Links and actions */
+a, .pf-c-button.pf-m-link { color: var(--primary) !important; }
+a:hover, .pf-c-button.pf-m-link:hover { filter: brightness(1.05); }
+
+/* Primary button: full width with soft shadow and rounded */
+.pf-c-button.pf-m-primary, .pf-v5-c-button.pf-m-primary {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff !important;
+  font-weight: 700;
+  border-radius: 12px;
+  height: 48px;
+  box-shadow: 0 10px 30px rgba(59,130,246,.35);
+}
+.pf-c-button.pf-m-primary:hover, .pf-v5-c-button.pf-m-primary:hover { filter: brightness(0.95); }
+
+/* Secondary/outline buttons */
+.pf-c-button:not(.pf-m-primary), .pf-v5-c-button:not(.pf-m-primary) {
+  border-radius: 12px; border-color: var(--border) !important; color: var(--text) !important;
+}
+
+/* Footer, helper text */
+.pf-c-login__main-footer, .pf-c-login__main-footer-links, .pf-c-login__main-footer-band,
+.pf-v5-c-login__footer, .pf-v5-c-login__footer-band { border: 0; color: var(--muted) !important; }
+
+/* Divider color */
+.pf-c-divider { --pf-v5-c-divider--after--BackgroundColor: var(--border); }
+.pf-c-alert { border-radius: 12px; }
+
+/* Compact paddings */
+.pf-c-login__main, .pf-v5-c-login__main { margin: 0; background: transparent; border: 0; box-shadow: none; padding: 28px 32px; }
+
+/* Utilities in input groups: keep the reveal button INSIDE the input */
+.pf-c-input-group .pf-c-button,
+.pf-v5-c-text-input-group__utilities .pf-v5-c-button {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  height: 100% !important;
+  width: 44px !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-width: 0 !important;
+  color: var(--text) !important;
+}
+.pf-v5-c-text-input-group__utilities { margin-left: 0; }
+
+/* Responsive tweaks */
+@media (max-width: 560px) {
+  .pf-c-login__main, .pf-v5-c-login__main { padding: 24px; }
+}
+
+/* Realm name: show and position centered above the card */
+/* No outer header; keep rule harmless if present */
+#kc-header { display: none; }
+#kc-header-wrapper { color: var(--text); font-weight: 800; letter-spacing: .2px; font-size: 20px; text-transform: uppercase; opacity: .9; }
+.login-pf-page .login-pf-brand { display: none !important; }
+
+/* PatternFly v5 Text Input Group (password with reveal button) */
+.pf-v5-c-text-input-group {
+  background: #0b1220 !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px;
+  height: 48px;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: none !important;
+}
+.pf-v5-c-text-input-group__text-input {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  height: 100% !important;
+  outline: none !important;
+  padding-right: 44px !important;
+}
+.pf-v5-c-text-input-group.pf-m-focus-within {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.25) !important;
+}
+.pf-v5-c-text-input-group__utilities {
+  display: flex; align-items: center; height: 100%;
+  border-left: 0 !important;                 /* senza divisore: il bottone Ã¨ "dentro" il campo */
+  background: transparent !important;
+}
+.pf-v5-c-text-input-group__utilities .pf-v5-c-button {
+  display: flex; align-items: center; justify-content: center;
+  background: transparent !important; background-color: transparent !important; background-image: none !important;
+  border: 0 !important; box-shadow: none !important; outline: none !important;
+  height: 100% !important; width: 44px !important; color: var(--text) !important; border-radius: 0 !important;
+}
+.pf-v5-c-text-input-group__utilities .pf-v5-c-button:hover,
+.pf-v5-c-text-input-group__utilities .pf-v5-c-button:focus {
+  background: rgba(148,163,184,.10) !important; box-shadow: none !important; outline: none !important;
+}
+/* Ensure the eye icon inherits color on various variants */
+
+/* --- Custom, framework-agnostic input with inside-eye toggle --- */
+/* Title inside the card */
+.kc-title { display: none; }
+.kc-card-title { color: var(--text); font-weight: 800; font-size: 22px; text-align: center; margin: 4px 0 42px 0; letter-spacing: .3px; text-transform: uppercase; opacity: .95; }
+
+/* Error variant styled in Cusman red tones */
+.kc-alert-error {
+  background: rgba(239, 68, 68, 0.12) !important;   /* red-500 @ ~12% */
+  border-color: rgba(239, 68, 68, 0.45) !important;  /* stronger red border */
+  color: #fecaca !important;                         /* red-200 text */
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  margin-bottom: 12px !important;
+  background-clip: padding-box !important;
+}
+
+/* Inline field error text */
+.field-error {
+  display: block;
+  color: #fca5a5 !important;  /* red-300 */
+  font-size: 12px;
+  margin-top: 8px;
+}.kc-field { margin-bottom: 20px; }
+.kc-label { display: block; color: var(--text); font-weight: 600; margin: 0 0 10px; }
+.kc-actions { margin-top: 18px; }
+.kc-links { margin-top: 12px; }
+.kc-links a { color: var(--primary) !important; }
+
+.input-wrap { position: relative; display: grid; align-items: center; }
+.input {
+  width: 100%;
+  background: #0b1220 !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 12px !important;
+  height: 48px !important;
+  padding: 0 14px;
+  outline: none; box-shadow: none;
+}
+.input:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(59,130,246,.25) !important; }
+
+/* Left icons through background-image (already provided svgs) */
+.input-email, .input-password {
+  padding-left: 44px !important;
+  background-position: 14px center;
+  background-repeat: no-repeat;
+  background-size: 18px 18px;
+}
+.input-email { background-image: url('../img/email.svg'); }
+.input-password { background-image: url('../img/lock.svg'); padding-right: 56px; line-height: 48px; }
+
+/* Eye button sitting inside the input on the right */
+.input-wrap > .input, .input-wrap > .input-eye { grid-area: 1 / 1; }
+.input-wrap > .input, .input-wrap > .input-eye { grid-area: 1 / 1; }
+.input-eye {
+  position: absolute !important; left: auto !important; right: 12px !important; top: 0 !important; bottom: 0 !important; margin-block: auto !important; transform: none !important;
+  width: 44px; height: 100%;
+  display: grid !important; place-items: center !important;
+  background: transparent !important; border: 0 !important; border-radius: 8px; color: var(--text);
+  cursor: pointer; padding: 0; margin: 0; z-index: 100 !important; pointer-events: auto !important;
+}
+.input-eye:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,.35); }
+.input-eye img { width: 18px; height: 18px; filter: drop-shadow(0 0 0 rgba(0,0,0,0)); pointer-events: none; }
+.input-eye:hover { background: rgba(148,163,184,.10); }
+
+/* Accessible helper for screen readers */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 1px, 1px); white-space: nowrap; border: 0; }
+
+/* Primary button style consistent with image */
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 100%; height: 48px; border-radius: 12px; font-weight: 700;
+  background: var(--primary); color: #fff; border: 1px solid var(--primary);
+  box-shadow: 0 10px 30px rgba(59,130,246,.35);
+}
+.btn-primary:hover { filter: brightness(0.95); }
+.pf-v5-c-text-input-group__utilities .pf-v5-c-button .pf-v5-c-button__icon,
+.pf-v5-c-text-input-group__utilities .pf-v5-c-button svg {
+  color: var(--text) !important; fill: currentColor !important; opacity: .9;
+}
+
+/* PF4 input group (older markup) */
+.pf-c-input-group { background: #0b1220 !important; border: 1px solid var(--border) !important; border-radius: 12px; height: 48px; overflow: hidden; }
+.pf-c-input-group .pf-c-form-control { border: 0 !important; height: 100% !important; box-shadow: none !important; background: transparent !important; padding-right: 44px !important; }
+.pf-c-input-group:focus-within { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(59,130,246,.25) !important; }
+
+/* Username/password inputs inside groups keep left padding for icons */
+.pf-v5-c-text-input-group input#username,
+.pf-v5-c-text-input-group input#password { padding-left: 44px !important; }
+
+/* Chrome/Safari autofill */
+input:-webkit-autofill {
+  -webkit-text-fill-color: var(--text) !important;
+  transition: background-color 9999s ease-in-out 0s !important;
+  box-shadow: 0 0 0 40px #0b1220 inset !important;
+}
+.pf-c-form-control::before, .pf-c-form-control::after,
+.pf-v5-c-form-control::before, .pf-v5-c-form-control::after,
+.pf-v5-c-text-input-group__text-input::before, .pf-v5-c-text-input-group__text-input::after {
+  display: none !important; content: none !important;
+}
+
+/* --- Overrides appended for visibility of icons and password eye --- */
+#kc-form-login input#username,
+#kc-form-login input[name="username"],
+#kc-form-login input[name="email"],
+#kc-form-login input[type="text"][name="login"] {
+  background-image: url('../img/email.svg') !important;
+  padding-left: 44px !important;
+  background-position: 14px center !important;
+  background-repeat: no-repeat !important;
+  background-size: 18px 18px !important;
+}
+#kc-form-login input#password,
+#kc-form-login input[name="password"] {
+  background-image: url('../img/lock.svg') !important;
+  padding-left: 44px !important;
+  background-position: 14px center !important;
+  background-repeat: no-repeat !important;
+  background-size: 18px 18px !important;
+}
+
+/* Ensure utilities area and eye button are transparent and aligned */
+#kc-form-login .pf-v5-c-text-input-group__utilities { background: transparent !important; border-left: 0 !important; }
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button {
+  background: transparent !important; background-color: transparent !important;
+  border: 0 !important; box-shadow: none !important; outline: none !important;
+  padding: 0 !important; margin: 0 !important; min-width: 0 !important;
+  width: 44px !important; height: 100% !important; border-radius: 0 !important;
+  color: var(--text) !important; -webkit-appearance: none; appearance: none;
+}
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button::before,
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button::after { background: transparent !important; box-shadow: none !important; }
+#kc-form-login .pf-v5-c-text-input-group__utilities {
+  /* Force PatternFly variables to transparent so nothing paints white */
+  --pf-v5-c-text-input-group__utilities--BackgroundColor: transparent;
+}
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button {
+  --pf-v5-c-button--BackgroundColor: transparent;
+  --pf-v5-c-button--m-control--BackgroundColor: transparent;
+  --pf-v5-c-button--after--BackgroundColor: transparent;
+  --pf-v5-c-button--before--BackgroundColor: transparent;
+}
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button::before,
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button::after { background: transparent !important; box-shadow: none !important; }
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button .pf-v5-c-button__icon,
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button svg { color: var(--text) !important; fill: currentColor !important; }
+
+/* Use custom eye icons inside the password reveal button */
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button {
+  cursor: pointer;
+  background-image: url('../img/eye.svg') !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 18px 18px !important;
+}
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button .pf-v5-c-button__icon,
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button svg { display: none !important; }
+
+/* When toggled to hide password, swap to eye-off icon (Keycloak changes aria-label) */
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button[aria-label*="Hide"],
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button[aria-pressed="true"] {
+  background-image: url('../img/eye-off.svg') !important;
+}
+
+/* PF4 fallback */
+#kc-form-login .pf-c-input-group .pf-c-button {
+  cursor: pointer;
+  background-image: url('../img/eye.svg') !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 18px 18px !important;
+}
+#kc-form-login .pf-c-input-group .pf-c-button[aria-label*="Hide"],
+#kc-form-login .pf-c-input-group .pf-c-button[aria-pressed="true"] {
+  background-image: url('../img/eye-off.svg') !important;
+}
+
+/* --- Strong overrides to remove any white box on reveal button (PF v5 + v4) --- */
+#kc-form-login .pf-v5-c-button.pf-m-control,
+#kc-form-login .pf-c-button.pf-m-control {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-width: 0 !important;
+}
+#kc-form-login .pf-v5-c-button.pf-m-control::before,
+#kc-form-login .pf-v5-c-button.pf-m-control::after,
+#kc-form-login .pf-c-button.pf-m-control::before,
+#kc-form-login .pf-c-button.pf-m-control::after {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+/* Make sure PF CSS vars don't paint backgrounds */
+#kc-form-login .pf-v5-c-text-input-group__utilities {
+  --pf-v5-c-button--BackgroundColor: transparent;
+  --pf-v5-c-button--m-control--BackgroundColor: transparent;
+  --pf-v5-c-button--m-control--after--BackgroundColor: transparent;
+  --pf-v5-c-button--m-control--before--BackgroundColor: transparent;
+  --pf-v5-c-button--m-control--BorderColor: transparent;
+}
+
+/* --- Keep eye icon INSIDE the input: enforce PFv5 layout locally --- */
+#kc-form-login .pf-v5-c-text-input-group { display: flex; overflow: hidden; }
+#kc-form-login .pf-v5-c-text-input-group__main { flex: 1 1 auto; min-width: 0; }
+#kc-form-login .pf-v5-c-text-input-group__text-input { width: 100% !important; padding-right: 44px !important; }
+#kc-form-login .pf-v5-c-text-input-group__utilities { flex: 0 0 auto; padding: 0 !important; margin-left: 0 !important; }
+
+/* Absolute place the reveal control inside the field (most reliable across PF variants) */
+#kc-form-login .pf-v5-c-text-input-group { position: relative !important; }
+#kc-form-login .pf-v5-c-text-input-group__utilities {
+  position: absolute !important;
+  right: 8px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  background: transparent !important;
+}
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button,
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button.pf-m-control {
+  width: 28px !important;
+  height: 28px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#kc-form-login .pf-v5-c-text-input-group__text-input { padding-right: 40px !important; }
+
+/* PF4 absolute placement as well */
+#kc-form-login .pf-c-input-group { position: relative !important; }
+#kc-form-login .pf-c-input-group .pf-c-button {
+  position: absolute !important;
+  right: 8px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 28px !important;
+  height: 28px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#kc-form-login .pf-c-input-group .pf-c-form-control { padding-right: 40px !important; }
+
+/* === Ultimate override: force reveal button to overlap the password field === */
+#kc-form-login { --reveal-size: 24px; --reveal-right: 12px; --reveal-nudge-y: 1px; }
+#kc-form-login .pf-v5-c-form__group,
+#kc-form-login .pf-c-form__group { position: static !important; }
+/* Ensure the immediate control wrapper is the positioning context */
+#kc-form-login .pf-v5-c-form__group-control,
+#kc-form-login .pf-c-form__group-control { position: relative !important; }
+
+#kc-form-login button[aria-label*="Show"],
+#kc-form-login button[aria-label*="Hide"] {
+  position: absolute !important;
+  right: 10px !important;                 /* stronger explicit alignment */
+  top: calc(50%) !important;        /* nudge down for visual center */
+  transform: translateY(-50%) !important;
+  width: 22px !important;
+  height: 22px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  z-index: 5 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+#kc-form-login input[type="password"],
+#kc-form-login input[name="password"],
+#kc-form-login input#password {
+  padding-right: 46px !important;
+}
+
+/* --- Fallback: place reveal button absolutely within generic form control wrappers --- */
+#kc-form-login .pf-v5-c-form__group-control,
+#kc-form-login .pf-c-form__group-control { position: relative; }
+#kc-form-login .pf-v5-c-form__group-control .pf-v5-c-button[aria-label*="Show"],
+#kc-form-login .pf-v5-c-form__group-control .pf-v5-c-button[aria-label*="Hide"],
+#kc-form-login .pf-c-form__group-control .pf-c-button[aria-label*="Show"],
+#kc-form-login .pf-c-form__group-control .pf-c-button[aria-label*="Hide"] {
+  position: absolute;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 22px !important;
+  height: 22px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+#kc-form-login .pf-v5-c-form__group-control input#password,
+#kc-form-login .pf-c-form__group-control input#password,
+#kc-form-login .pf-v5-c-form__group-control input[type="password"],
+#kc-form-login .pf-c-form__group-control input[type="password"] {
+  padding-right: 44px !important;
+}
+
+/* --- Tighten password reveal control inside input (PF5 + PF4) --- */
+#kc-form-login .pf-v5-c-text-input-group__utilities {
+  padding: 0 !important;
+  border-left: 0 !important;
+  background: transparent !important;
+}
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button,
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button.pf-m-control {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  width: 44px !important;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-width: 0 !important;
+  border-radius: 0 !important;
+}
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button::before,
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button::after { background: transparent !important; box-shadow: none !important; }
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button:hover,
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button:focus {
+  background: rgba(148,163,184,.10) !important;
+}
+#kc-form-login .pf-v5-c-text-input-group__text-input { padding-right: 44px !important; }
+
+/* PF4 control variant too */
+#kc-form-login .pf-c-input-group { overflow: hidden; }
+#kc-form-login .pf-c-input-group .pf-c-form-control { background: transparent !important; padding-right: 44px !important; }
+#kc-form-login .pf-c-input-group .pf-c-button.pf-m-control {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  width: 44px !important; height: 100% !important;
+  padding: 0 !important; margin: 0 !important; min-width: 0 !important;
+  border-radius: 0 !important;
+}
+/* === Final centering for reveal button (no pixel top offsets) === */
+/* PF v5 input group: place utilities absolutely and center vertically via top/bottom */
+#kc-form-login .pf-v5-c-text-input-group { position: relative !important; overflow: visible !important; }
+#kc-form-login .pf-v5-c-text-input-group__utilities {
+  position: absolute !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  right: 12px !important;
+  left: auto !important;
+  width: 26px !important;                 /* fixed rail for the eye */
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 2 !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button,
+#kc-form-login .pf-v5-c-text-input-group__utilities .pf-v5-c-button.pf-m-control {
+  width: 100% !important; height: 100% !important; padding: 0 !important; margin: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.08) !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* PF v4 input group: same absolute centering */
+#kc-form-login .pf-c-input-group { position: relative !important; }
+#kc-form-login .pf-c-input-group .pf-c-button {
+  position: absolute !important;
+  right: 10px !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  margin-block: auto !important;
+  width: 22px !important; height: 22px !important; padding: 0 !important; margin-inline: 0 !important;
+}
+
+/* Generic Show/Hide button: let the UTILITIES container control positioning */
+/* Remove any global absolute placement on show/hide to avoid escaping the field */
+#kc-form-login button[aria-label*="Show"]:not(.input-eye),
+#kc-form-login button[aria-label*="Hide"]:not(.input-eye) {
+  position: static !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+}
+
+/* Absolute position ONLY when button is inside the control wrapper (PF5/PF4) */
+#kc-form-login .pf-v5-c-form__group-control > button[aria-label*="Show"],
+#kc-form-login .pf-v5-c-form__group-control > button[aria-label*="Hide"],
+#kc-form-login .pf-c-form__group-control > button[aria-label*="Show"],
+#kc-form-login .pf-c-form__group-control > button[aria-label*="Hide"] {
+  position: absolute !important;
+  right: 12px !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  margin: auto 0 !important;
+  transform: none !important;
+  width: 26px !important;
+  height: 26px !important;
+  padding: 0 !important;
+  z-index: 2 !important;
+}
+
+/* Make sure the password input has space for the icon */
+#kc-form-login .pf-v5-c-form__group-control input[type="password"],
+#kc-form-login .pf-c-form__group-control input[type="password"] {
+  padding-right: 44px !important;
+}
+
+/* Inside-input eye button: pill, right aligned, vertically centered */
+#kc-form-login {
+  --eye-size: 26px;
+  --eye-right: 12px;
+}
+#kc-form-login .pf-v5-c-form__group-control,
+#kc-form-login .pf-c-form__group-control { position: relative !important; }
+
+#kc-form-login .pf-v5-c-form__group-control > button[aria-label*="Show"],
+#kc-form-login .pf-v5-c-form__group-control > button[aria-label*="Hide"],
+#kc-form-login .pf-c-form__group-control > button[aria-label*="Show"],
+#kc-form-login .pf-c-form__group-control > button[aria-label*="Hide"],
+#kc-form-login .pf-c-input-group > .pf-c-button.pf-m-control {
+  position: absolute !important;
+  right: 12px !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  margin: auto 0 !important;
+  transform: none !important;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.08) !important;
+  border: 1px solid var(--border) !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  z-index: 2 !important;
+}
+#kc-form-login .pf-v5-c-form__group-control > button[aria-label*="Show"]:hover,
+#kc-form-login .pf-v5-c-form__group-control > button[aria-label*="Hide"]:hover,
+#kc-form-login .pf-c-form__group-control > button[aria-label*="Show"]:hover,
+#kc-form-login .pf-c-form__group-control > button[aria-label*="Hide"]:hover,
+#kc-form-login .pf-c-input-group > .pf-c-button.pf-m-control:hover {
+  background: rgba(255,255,255,.12) !important;
+}
+
+/* Ensure enough space in the password input for the pill */
+#kc-form-login .pf-v5-c-form__group-control input[type="password"],
+#kc-form-login .pf-c-form__group-control input[type="password"],
+#kc-form-login input#password,
+#kc-form-login input[name="password"] {
+  padding-right: 56px !important; /* ensure text never overlaps the pill */
+}
+
+

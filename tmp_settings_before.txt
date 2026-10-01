@@ -1,0 +1,110 @@
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.field {
+  display: grid;
+  gap: 6px;
+}
+select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--fg);
+  border: 1px solid var(--border);
+}
+.soft-divider {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 10px 0 14px 0;
+}
+.key-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.key-row input {
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--fg);
+  border: 1px solid var(--border);
+}
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--fg);
+}
+.icon-btn:hover { background: var(--row-hover); }
+
+.helper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+.helper.end { justify-content: flex-end; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  color: var(--color-text-secondary);
+}
+.chip.success { border-color: var(--color-secondary); color: var(--color-secondary); }
+.chip.warn { border-color: var(--state-none); color: var(--state-none); }
+.chip.danger { border-color: var(--state-rejected); color: var(--state-rejected); }
+
+.actions--key {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+.actions--key .status-chip { margin-left: 12px; }
+
+.row--key {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.row--key .right { display: inline-flex; gap: 8px; align-items: center; }
+.row--key .left { display: inline-flex; align-items: center; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--panel-head);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  min-height: 34px;
+  font-size: 0.9rem;
+}
+.btn.primary { background: var(--active-bg); color: #fff; border-color: transparent; }
+.btn.outline { background: transparent; border-color: var(--border); }
+.btn:disabled { opacity: .6; cursor: default; }
+select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--fg);
+  border: 1px solid var(--border);
+}
+
