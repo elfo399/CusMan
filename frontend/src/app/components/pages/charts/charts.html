@@ -1,0 +1,60 @@
+<section class="page charts-page">
+  <h2 class="page__title">{{ 'nav.charts' | t }}</h2>
+
+  @if (loading) {
+    <p>{{ 'charts.loading' | t }}</p>
+  } @else if (error) {
+    <p class="err">{{ 'charts.error' | t }}</p>
+  } @else {
+    <div class="dashboard-split">
+      <div class="col">
+        <div class="section-title">Clienti</div>
+        <div class="kpi-grid clients">
+          @for (item of partnerKpi; track item.label) {
+            <div class="kpi">
+              <div class="kpi__label">{{ item.label }}</div>
+              <div class="kpi__line">
+                <span class="kpi__value">{{ item.value }}</span>
+                <span class="kpi__meta">@if (partnersTotal > 0) { / {{ partnersTotal }} ({{ (item.value / partnersTotal) | percent:'1.0-0' }}) } @else { / 0 (0%) }</span>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="charts-grid two">
+          <div class="chart-card">
+            <h3>Distribuzione stato clienti</h3>
+            <p-chart type="pie" [data]="partnerPieData" [options]="partnerPieOptions" style="height: 360px; display:block"></p-chart>
+          </div>
+          <div class="chart-card">
+            <h3>Assegnati a me (clienti)</h3>
+            <p-chart type="pie" [data]="partnerAssignData" [options]="partnerAssignOptions" style="height: 300px; display:block"></p-chart>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="section-title">Comunicazione</div>
+        <div class="kpi-grid comm">
+          @for (item of kpi; track item.label) {
+            <div class="kpi">
+              <div class="kpi__label">{{ item.label }}</div>
+              <div class="kpi__line">
+                <span class="kpi__value">{{ item.value }}</span>
+                <span class="kpi__meta">@if (kpiTotal > 0) { / {{ kpiTotal }} ({{ (item.value / kpiTotal) | percent:'1.0-0' }}) } @else { / 0 (0%) }</span>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="charts-grid two">
+          <div class="chart-card">
+            <h3>Distribuzione stato comunicazioni</h3>
+            <p-chart type="pie" [data]="pieData" [options]="pieOptions" style="height: 360px; display:block"></p-chart>
+          </div>
+          <div class="chart-card">
+            <h3>Assegnati a me (comunicazioni)</h3>
+            <p-chart type="pie" [data]="assignData" [options]="assignOptions" style="height: 300px; display:block"></p-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</section>

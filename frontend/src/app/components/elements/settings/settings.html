@@ -1,0 +1,67 @@
+<div class="settings-stack">
+  <!-- Card: Lingua -->
+  <div class="card settings-card">
+    <header class="settings-head">
+      <div class="title-wrap"><i class="pi pi-cog"></i><h3 class="title">{{ 'settings.title' | t }}</h3></div>
+    </header>
+    <section class="field">
+      <label for="lang" class="field__label">{{ 'settings.language' | t }}</label>
+      <select id="lang" class="field__control" [value]="lang" (change)="onLangChange($event)">
+        <option value="it">{{ 'settings.italian' | t }}</option>
+        <option value="en">{{ 'settings.english' | t }}</option>
+      </select>
+    </section>
+  </div>
+
+  <!-- Card: Griglia Clienti -->
+  <div class="card settings-card">
+    <div class="field field--group">
+      <div class="field-head">
+        <div class="field-title"><i class="pi pi-th-large"></i><span>{{ 'settings.clients.grid' | t }}</span></div>
+        <button class="btn primary" type="button" (click)="saveClientsGrid()" [disabled]="savingGrid">{{ savingGrid ? ('common.saving'|t) : ('common.save'|t) }}</button>
+      </div>
+      <div class="grid-row">
+        <label class="grid-cell">
+          <span class="muted small">{{ 'settings.clients.cols' | t }}</span>
+          <select [(ngModel)]="clientsGridCols" class="field__control">
+            <option [ngValue]="3">3</option>
+            <option [ngValue]="4">4</option>
+            <option [ngValue]="5">5</option>
+            <option [ngValue]="6">6</option>
+          </select>
+        </label>
+        <label class="grid-cell">
+          <span class="muted small">{{ 'settings.clients.rows' | t }}</span>
+          <select [(ngModel)]="clientsGridRows" class="field__control">
+            <option [ngValue]="2">2</option>
+            <option [ngValue]="3">3</option>
+            <option [ngValue]="4">4</option>
+            <option [ngValue]="5">5</option>
+          </select>
+        </label>
+      </div>
+      <p class="help">{{ 'settings.clients.gridHelp' | t }}</p>
+    </div>
+  </div>
+
+  <!-- Card: Google Places key -->
+  <div class="card settings-card">
+    <section class="field">
+      <label for="gplaces" class="field__label">{{ 'settings.gplaces.label' | t }}</label>
+      <div class="key-row">
+        <input id="gplaces" class="field__control" [type]="showKey ? 'text' : 'password'" [(ngModel)]="gplacesKey" [placeholder]="'settings.gplaces.placeholder' | t" />
+        <button class="icon-btn" type="button" (click)="toggleShowKey()" [title]="showKey ? ('common.hide'|t) : ('common.show'|t)" aria-label="toggle"><i class="pi" [ngClass]="showKey ? 'pi-eye-slash' : 'pi-eye'"></i></button>
+        <button class="icon-btn" type="button" (click)="copyKey()" [title]="'common.copy'|t" aria-label="copy"><i class="pi pi-copy"></i></button>
+      </div>
+      <div class="row row--key">
+        <div class="left">
+          <span class="chip" [class.success]="me?.hasGooglePlacesKey" [class.danger]="!me?.hasGooglePlacesKey">{{ me?.hasGooglePlacesKey ? ('settings.gplaces.saved'|t) : ('settings.gplaces.notSet'|t) }}</span>
+        </div>
+        <div class="right">
+          <button class="btn outline" type="button" (click)="clearGooglePlacesKey()" [disabled]="savingKey || !me?.hasGooglePlacesKey">{{ 'settings.gplaces.remove' | t }}</button>
+          <button class="btn primary" type="button" (click)="saveGooglePlacesKey()" [disabled]="savingKey">{{ savingKey ? ('common.saving'|t) : ('settings.gplaces.save'|t) }}</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

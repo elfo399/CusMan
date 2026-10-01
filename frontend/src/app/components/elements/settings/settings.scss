@@ -1,0 +1,51 @@
+/* Card shell */
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.04); }
+
+/* Header */
+.settings-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.title-wrap { display: inline-flex; align-items: center; gap: 8px; }
+.title-wrap .pi { color: var(--icon-active); }
+.settings-head .title { margin: 0; font-weight: 600; }
+
+/* Generic field */
+.field { display: grid; gap: 8px; }
+.field__label { font-size: 12px; opacity: .9; }
+.field__control { height: 40px; padding: 0 12px; border-radius: 8px; background: var(--panel); color: var(--fg); border: 1px solid var(--border); }
+.soft-divider { border: 0; border-top: 1px solid var(--border); margin: 12px 0 14px; }
+.muted { color: var(--color-text-secondary); }
+.muted.small { font-size: 12px; }
+
+/* Grid preference block */
+.field--group { gap: 10px; }
+.field-head { display: flex; align-items: center; justify-content: space-between; }
+.field-title { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+.grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid-cell { display: grid; gap: 6px; }
+.help { margin: 2px 0 0; font-size: 12px; color: var(--color-text-secondary); }
+
+/* Key row (API key input + actions) */
+.key-row { display: grid; grid-template-columns: 1fr auto auto; gap: 6px; align-items: center; }
+.icon-btn { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 6px; background: var(--panel); border: 1px solid var(--border); color: var(--fg); }
+.icon-btn:hover { background: var(--row-hover); }
+
+.row--key { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.row--key .right { display: inline-flex; gap: 8px; align-items: center; }
+.row--key .left { display: inline-flex; align-items: center; }
+/* Align settings buttons to app UI proportions */
+.settings-card .btn { min-height: 36px; border-radius: 10px; }
+.settings-card .right .btn { min-width: 96px; }
+
+/* Chips */
+.chip { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 12px; border: 1px solid var(--border); color: var(--color-text-secondary); }
+.chip.success { border-color: var(--color-secondary); color: var(--color-secondary); }
+.chip.warn { border-color: var(--state-none); color: var(--state-none); }
+.chip.danger { border-color: var(--state-rejected); color: var(--state-rejected); }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; background: var(--panel-head); color: var(--fg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; min-height: 34px; font-size: .9rem; }
+.btn.primary { background: var(--active-bg); color: #fff; border-color: transparent; }
+.btn.outline { background: transparent; border-color: var(--border); }
+.btn:disabled { opacity: .6; cursor: default; }
+
+/* Vertical stack of cards */
+.settings-stack { display: grid; gap: 12px; }

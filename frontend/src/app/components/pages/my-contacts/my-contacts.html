@@ -1,0 +1,281 @@
+<section class="page">
+  <h2 class="page__title">{{ 'nav.myContacts' | t }}</h2>
+
+  @if (error) { <div class="error">{{ 'communications.errorLoading' | t }}</div> }
+
+  @if (loading) {
+    <div class="loading"><span class="spinner" role="status" [attr.aria-label]="'charts.loading' | t"></span></div>
+  } @else {
+    @if (clienti.length === 0) {
+      <div class="empty-center">{{ 'myContacts.emptyAssigned' | t }}</div>
+    } @else {
+    <div class="table-toolbar">
+      <div class="toolbar-left">
+        <div class="search">
+          <i class="pi pi-search"></i>
+          <input [(ngModel)]="q" name="q" [placeholder]="'common.search' | t" (keyup.enter)="applyFilter()" />
+        </div>
+      </div>
+      <div class="toolbar-right">
+        <button type="button" class="icon-btn" [title]="'common.refresh' | t" (click)="refresh()"><i class="pi pi-refresh"></i></button>
+        <button type="button" class="icon-btn" [title]="'common.filters' | t" (click)="toggleFilters()"><i class="pi pi-filter"></i></button>
+
+        @if (showFilters) {
+          <div class="filter-menu" (click)="$event.stopPropagation()">
+            @if (filtersLoading) { <div class="loading"><span class="spinner" role="status" aria-label="Loading"></span></div> }
+            @else if (filtersError) { <div class="error">{{ 'filters.errorLoading' | t }}</div> }
+            @else {
+              <!-- Cities submenu -->
+              <button class="submenu-btn" type="button" (click)="toggleSection('city')">
+                <span>{{ 'filters.cities' | t }}</span>
+                <i class="pi" [ngClass]="openCities ? 'pi-angle-down' : 'pi-angle-right'"></i>
+              </button>
+              <div class="submenu-panel" [class.open]="openCities">
+                <input class="mini-search" [(ngModel)]="cityFilter" [placeholder]="'filters.searchCity' | t" />
+                <div class="options">
+                  @for (opt of filterList(distinctCities, cityFilter); track opt) {
+                    <label><input type="checkbox" [checked]="isChecked('city', opt)" (change)="toggleOption('city', opt, $event)" /> {{ opt }}</label>
+                  }
+                </div>
+              </div>
+
+              <!-- Categories submenu -->
+              <button class="submenu-btn" type="button" (click)="toggleSection('category')">
+                <span>{{ 'filters.categories' | t }}</span>
+                <i class="pi" [ngClass]="openCategories ? 'pi-angle-down' : 'pi-angle-right'"></i>
+              </button>
+              <div class="submenu-panel" [class.open]="openCategories">
+                <input class="mini-search" [(ngModel)]="categoryFilter" [placeholder]="'filters.searchCategory' | t" />
+                <div class="options">
+                  @for (opt of filterList(distinctCategories, categoryFilter); track opt) {
+                    <label><input type="checkbox" [checked]="isChecked('category', opt)" (change)="toggleOption('category', opt, $event)" /> {{ opt }}</label>
+                  }
+                </div>
+              </div>
+
+              <!-- Status submenu -->
+              <button class="submenu-btn" type="button" (click)="toggleSection('status')">
+                <span>{{ 'filters.status' | t }}</span>
+                <i class="pi" [ngClass]="openStatuses ? 'pi-angle-down' : 'pi-angle-right'"></i>
+              </button>
+              <div class="submenu-panel" [class.open]="openStatuses">
+                <input class="mini-search" [(ngModel)]="statusFilter" [placeholder]="'filters.searchStatus' | t" />
+                <div class="options">
+                  @for (opt of filterList(distinctStatuses, statusFilter); track opt) {
+                    <label><input type="checkbox" [checked]="isChecked('status', opt)" (change)="toggleOption('status', opt, $event)" /> {{ opt }}</label>
+                  }
+                </div>
+              </div>
+
+              <div class="filters-actions">
+                <button type="button" class="btn ghost" (click)="clearAllFilters()">{{ 'filters.clear' | t }}</button>
+                <button type="button" class="btn primary" (click)="applyFilters()">{{ 'filters.apply' | t }}</button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="clients-table" aria-label="{{ 'nav.myContacts' | t }}">
+        <colgroup>
+          <col style="width:24%" /> <!-- Nome -->
+          <col style="width:14%" /> <!-- Città -->
+          <col style="width:14%" /> <!-- Categoria -->
+          <col style="width:14%" /> <!-- Data start -->
+          <col style="width:12%" /> <!-- FU1 -->
+          <col style="width:12%" /> <!-- FU2 -->
+          <col style="width:10%" /> <!-- Stato -->
+          <col style="width:10%" /> <!-- Azioni -->
+        </colgroup>
+        <thead>
+          <tr>
+            <th>{{ 'communications.table.name' | t }}</th>
+            <th>{{ 'communications.table.city' | t }}</th>
+            <th>{{ 'communications.table.category' | t }}</th>
+            <th>Data start</th>
+            <th>Follow up 1</th>
+            <th>Follow up 2</th>
+              <th>{{ 'communications.table.status' | t }}</th>
+              <th class="col-actions" aria-label="Azioni">More</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of clienti; track c.id) {
+            <tr>
+              <td class="name-cell"><span class="name">{{ c.nome }}</span></td>
+              <td>{{ c.citta }}</td>
+              <td>{{ c.categoria }}</td>
+              <td>{{ c.data_start || '—' }}</td>
+              <td>{{ c.data_follow_up_1 || '—' }}</td>
+              <td>{{ c.data_follow_up_2 || '—' }}</td>
+              <td>
+                <span class="stato" [ngClass]="statusClass(c.stato)">{{ c.stato }}</span>
+              </td>
+              <td class="col-actions has-menu">
+                <button type="button" class="circle-btn" (click)="toggleRowMenu(c.id, $event); $event.stopPropagation()" title="Azioni" aria-label="Azioni">
+                  <i class="pi pi-ellipsis-v"></i>
+                </button>
+                @if (openRowMenuId === c.id) {
+                  <div class="row-menu" [class.up]="rowMenuUp" (click)="$event.stopPropagation()">
+                    @if (siteHref(c.site)) {
+                      <button class="row-menu__item" type="button" (click)="openSiteFromRow(c)"><i class="pi pi-external-link"></i><span>Apri URL</span></button>
+                    }
+                    <button class="row-menu__item" type="button" (click)="openDetails(c)"><i class="pi pi-pencil"></i><span>Modifica dettagli</span></button>
+                    <button class="row-menu__item danger" type="button" (click)="deleteRow(c)"><i class="pi pi-trash"></i><span>Elimina riga</span></button>
+                  </div>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      </div>
+    }
+
+    @if (detailOpen) {
+      <div class="overlay" (click)="creating ? null : closeDetails()"></div>
+      <div class="detail-card" role="dialog" aria-modal="true" [attr.aria-label]="'details.title' | t" (click)="creating ? null : closeDetails()">
+        @if (detailLoading) { <div class="loading"><span class="spinner" role="status" aria-label="Loading"></span></div> }
+        @else {
+          <div class="card" (click)="$event.stopPropagation()">
+            <header class="card-header">
+              <h3 class="card-title">{{ 'details.title' | t }}</h3>
+              <button type="button" class="btn-close" (click)="closeDetails()" [attr.aria-label]="'common.close' | t"><i class="pi pi-times"></i></button>
+            </header>
+            <div class="card-body">
+              <div class="detail-split">
+                <div class="map-pane" aria-label="Mappa cliente">
+                  @if (mapUrl) {
+                    <iframe [src]="mapUrl" class="map-frame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa posizione"></iframe>
+                    <div class="map-actions"><a class="link" [href]="mapsLink || '#'" target="_blank" rel="noopener">Apri in Google Maps</a></div>
+                  } @else {
+                    <div class="map-placeholder"><i class="pi pi-map-marker"></i><p>Nessuna posizione disponibile</p></div>
+                  }
+                </div>
+                <div class="form-pane">
+                  <form (submit)="saveChanges(); $event.preventDefault();">
+                    <div class="grid-2">
+                      <label class="f-nome"><span>Nome</span><input [(ngModel)]="editing.nome" name="nome" required [class.invalid]="showErrors && !(editing.nome?.trim())" /></label>
+                      <label class="f-citta"><span>Città</span><input [(ngModel)]="editing.citta" name="citta" required [class.invalid]="showErrors && !(editing.citta?.trim())" /></label>
+                      <label class="f-categoria"><span>Categoria</span><input [(ngModel)]="editing.categoria" name="categoria" required [class.invalid]="showErrors && !(editing.categoria?.trim())" /></label>
+                      <label class="f-assegnato">
+                        <span>Assegnato</span>
+                        <select [(ngModel)]="editing.assegnato" name="assegnato">
+                          <option [ngValue]="null">-- Nessuno --</option>
+                          @for (u of users; track u.id) {
+                            <option [ngValue]="u.username">{{ u.display }}</option>
+                          }
+                        </select>
+                      </label>
+                      <label class="f-stato"><span>{{ 'form.status' | t }}</span>
+                        <select [(ngModel)]="editing.stato" name="stato" required [class.invalid]="showErrors && !(editing.stato?.trim())">
+                          <option [ngValue]="null" disabled hidden>-- Seleziona --</option>
+                          @for (s of states; track s) { <option [ngValue]="s">{{ s }}</option> }
+                        </select>
+                        @if (showErrors && !(editing.stato?.trim())) { <small class="err">{{ 'form.required' | t }}</small> }
+                      </label>
+                      <label class="f-fu1"><span>{{ 'form.follow1' | t }}</span><input [(ngModel)]="editing.data_follow_up_1" name="data_follow_up_1" type="date" /></label>
+                      <label class="f-fu2"><span>{{ 'form.follow2' | t }}</span><input [(ngModel)]="editing.data_follow_up_2" name="data_follow_up_2" type="date" /></label>
+                      <label class="f-sito"><span>{{ 'form.site' | t }}</span><input [(ngModel)]="editing.site" name="site" /></label>
+                      <label class="f-email"><span>{{ 'form.email' | t }}</span><input [(ngModel)]="editing.email_1" name="email_1" type="email" /></label>
+                      <label class="f-telefono"><span>{{ 'form.phone' | t }}</span><input [(ngModel)]="editing.phone_1" name="phone_1" /></label>
+                      <label class="span-2">
+                        <button type="button" class="link" (click)="showMoreContacts = !showMoreContacts"><i class="pi" [ngClass]="showMoreContacts ? 'pi-angle-down' : 'pi-angle-right'"></i><span>{{ 'form.moreContacts' | t }}</span></button>
+                      </label>
+                      @if (showMoreContacts) {
+                        <label><span>{{ 'form.email2' | t }}</span><input [(ngModel)]="editing.email_2" name="email_2" type="email" /></label>
+                        <label><span>{{ 'form.phone2' | t }}</span><input [(ngModel)]="editing.phone_2" name="phone_2" /></label>
+                        <label><span>{{ 'form.email3' | t }}</span><input [(ngModel)]="editing.email_3" name="email_3" type="email" /></label>
+                        <label><span>{{ 'form.phone3' | t }}</span><input [(ngModel)]="editing.phone_3" name="phone_3" /></label>
+                        <label><span>{{ 'form.latitude' | t }}</span><input [(ngModel)]="editing.latitude" name="latitude" type="number" step="0.000001" (input)="onCoordChange()" /></label>
+                        <label><span>{{ 'form.longitude' | t }}</span><input [(ngModel)]="editing.longitude" name="longitude" type="number" step="0.000001" (input)="onCoordChange()" /></label>
+                      }
+                      <label class="span-2"><span>{{ 'form.notes' | t }}</span><textarea [(ngModel)]="editing.note" name="note" rows="3"></textarea></label>
+                    </div>
+                    <div class="actions">
+                      <button type="button" class="btn primary" (click)="openSaveConfirm()" [disabled]="saving">{{ 'common.save' | t }}</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</section>
+
+@if (confirmDelete) {
+  <div class="overlay overlay--confirm" (click)="closeConfirmDelete()"></div>
+  <div class="confirm-card" role="dialog" aria-modal="true" [attr.aria-label]="'confirm.delete.title' | t">
+    <div class="card">
+      <header class="card-header">
+        <h3 class="card-title">{{ 'confirm.delete.title' | t }}</h3>
+        <button type="button" class="btn-close" (click)="closeConfirmDelete()" [attr.aria-label]="'common.close' | t">
+          <i class="pi pi-times"></i>
+        </button>
+      </header>
+      <div class="card-body">
+        <p>{{ 'confirm.delete.warning' | t }}</p>
+        <div class="actions">
+          <button type="button" class="btn ghost" (click)="closeConfirmDelete()">{{ 'common.cancel' | t }}</button>
+          <button type="button" class="btn danger" (click)="deleteCliente()" [disabled]="deleting">{{ 'common.delete' | t }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (confirmSite) {
+  <div class="overlay overlay--confirm" (click)="closeSiteConfirm()"></div>
+  <div class="confirm-card" role="dialog" aria-modal="true" [attr.aria-label]="'confirm.site.title' | t">
+    <div class="card">
+      <header class="card-header">
+        <h3 class="card-title">{{ 'confirm.site.title' | t }}</h3>
+        <button type="button" class="btn-close" (click)="closeSiteConfirm()" [attr.aria-label]="'common.close' | t">
+          <i class="pi pi-times"></i>
+        </button>
+      </header>
+      <div class="card-body">
+        <p>Stai per aprire:</p>
+        <p><strong>{{ pendingSiteUrl }}</strong></p>
+        <div class="actions">
+          <button type="button" class="btn ghost" (click)="closeSiteConfirm()">{{ 'common.cancel' | t }}</button>
+          <button type="button" class="btn primary" (click)="proceedOpenSite()">{{ 'common.proceed' | t }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (confirmSave) {
+  <div class="overlay overlay--confirm" (click)="closeSaveConfirm()"></div>
+  <div class="confirm-card" role="dialog" aria-modal="true" [attr.aria-label]="'confirm.save.title' | t">
+    <div class="card">
+      <header class="card-header">
+        <h3 class="card-title">{{ 'confirm.save.title' | t }}</h3>
+        <button type="button" class="btn-close" (click)="closeSaveConfirm()" [attr.aria-label]="'common.close' | t">
+          <i class="pi pi-times"></i>
+        </button>
+      </header>
+      <div class="card-body">
+        @if (changesSummary.length === 0) {
+          <p>{{ 'confirm.save.noChanges' | t }}</p>
+        } @else {
+          <ul>
+            @for (ch of changesSummary; track ch.key) {
+              <li><strong>{{ ch.label | t }}:</strong> {{ ch.from }} → {{ ch.to }}</li>
+            }
+          </ul>
+        }
+        <div class="actions">
+          <button type="button" class="btn ghost" (click)="closeSaveConfirm()">{{ 'common.cancel' | t }}</button>
+          <button type="button" class="btn primary" (click)="saveChanges()" [disabled]="saving">{{ 'common.confirm' | t }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

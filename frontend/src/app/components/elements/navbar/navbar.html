@@ -1,0 +1,39 @@
+﻿<aside class="sidebar">
+  <div class="sidebar__top">
+    <a routerLink="/home" routerLinkActive="active" class="icon-btn brand" [pTooltip]="'nav.home' | t" [attr.aria-label]="'nav.home' | t" tooltipPosition="right">
+      <img src="/img/brand.svg" alt="Home" />
+    </a>
+  </div>
+
+  <nav class="sidebar__nav">
+    <a routerLink="/home" routerLinkActive="active" class="icon-btn" [pTooltip]="'nav.home' | t" [attr.aria-label]="'nav.home' | t" tooltipPosition="right">
+      <i class="pi pi-home"></i>
+    </a>
+    <a routerLink="/clienti-da-chiamare" routerLinkActive="active" class="icon-btn" [pTooltip]="'nav.communications' | t" [attr.aria-label]="'nav.communications' | t" tooltipPosition="right">
+      <i class="pi pi-comments"></i>
+    </a>
+    <a routerLink="/miei-contatti" routerLinkActive="active" class="icon-btn" [pTooltip]="'nav.myContacts' | t" [attr.aria-label]="'nav.myContacts' | t" tooltipPosition="right">
+      <i class="pi pi-id-card"></i>
+    </a>
+    <a routerLink="/clienti" routerLinkActive="active" class="icon-btn" [pTooltip]="'nav.clients' | t" [attr.aria-label]="'nav.clients' | t" tooltipPosition="right">
+      <i class="pi pi-users"></i>
+    </a>
+    <a routerLink="/grafici" routerLinkActive="active" class="icon-btn" [pTooltip]="'nav.charts' | t" [attr.aria-label]="'nav.charts' | t" tooltipPosition="right">
+      <i class="pi pi-chart-bar"></i>
+    </a>
+    <a routerLink="/scraper" routerLinkActive="active" class="icon-btn" [pTooltip]="'nav.scraper' | t" [attr.aria-label]="'nav.scraper' | t" tooltipPosition="right">
+      <i class="pi pi-search"></i>
+    </a>
+  
+  </nav>
+
+  <div class="sidebar__bottom">
+    <button class="icon-btn" type="button" (click)="toggleTheme()" [pTooltip]="isLight ? ('theme.dark' | t) : ('theme.light' | t)" [attr.aria-label]="isLight ? ('theme.dark' | t) : ('theme.light' | t)" tooltipPosition="right">
+      <i class="pi" [ngClass]="isLight ? 'pi-sun' : 'pi-moon'"></i>
+    </button>
+    <div class="sidebar__divider" aria-hidden="true"></div>
+    <button class="avatar" type="button" (click)="openProfile()" [pTooltip]="'nav.profile' | t" [attr.aria-label]="'nav.profile' | t" tooltipPosition="right" [title]="'nav.profile' | t">
+      {{ userInitial }}
+    </button>
+  </div>
+</aside>
