@@ -58,7 +58,7 @@ function Redeploy([string]$svc, [switch]$NoCache) {
 $subs = @()
 try {
   if ($watchFe) {
-    $feRoot = Join-Path $PSScriptRoot '..' | Join-Path 'fe' | Resolve-Path
+    $feRoot = Join-Path $PSScriptRoot '..' | Join-Path 'frontend' | Resolve-Path
     $wfe = New-Watcher $feRoot
     foreach ($evt in 'Changed','Created','Deleted','Renamed') {
       $subs += Register-ObjectEvent -InputObject $wfe -EventName $evt -Action { Mark-Pending 'frontend' }
@@ -66,7 +66,7 @@ try {
     Write-Host "[watch] Watching FE: $feRoot" -ForegroundColor DarkGray
   }
   if ($watchBe) {
-    $beRoot = Join-Path $PSScriptRoot '..' | Join-Path 'be' | Resolve-Path
+    $beRoot = Join-Path $PSScriptRoot '..' | Join-Path 'backend' | Resolve-Path
     $wbe = New-Watcher $beRoot
     foreach ($evt in 'Changed','Created','Deleted','Renamed') {
       $subs += Register-ObjectEvent -InputObject $wbe -EventName $evt -Action { Mark-Pending 'backend' }

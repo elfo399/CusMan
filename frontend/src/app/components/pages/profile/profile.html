@@ -1,0 +1,96 @@
+<section class="page">
+  <div class="grid">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="titles">
+          <h2 class="title">{{ 'profile.title' | t }}</h2>
+          <div class="subtitle">
+            <span class="muted">{{ profile?.username || '-' }}</span>
+          </div>
+        </div>
+        <button
+          pButton
+          type="button"
+          [label]="'profile.logout' | t"
+          icon="pi pi-sign-out"
+          class="p-button-outlined p-button-danger"
+          (click)="logout()"
+        ></button>
+      </div>
+    </div>
+
+    <!-- Left column: avatar + form stacked -->
+    <div class="col-12 lg:col-4">
+      <div class="profile-stack">
+        <div class="card profile-card">
+          <div class="avatar-wrap">
+            <div class="avatar">
+              <div class="avatar-fallback">
+                {{ (firstName || profile?.firstName || 'U') | slice:0:1 }}
+              </div>
+            </div>
+          </div>
+          <div class="profile-meta">
+            <div class="name">{{ (firstName || profile?.firstName) }} {{ (lastName || profile?.lastName) }}</div>
+            <div class="username">@{{ profile?.username || '-' }}</div>
+          </div>
+            <div class="meta-list">
+              <div class="meta-row">
+                <span class="label">{{ 'profile.email' | t }}</span>
+                <span class="value clamp">{{ email || profile?.email || '-' }}</span>
+              </div>
+            </div>
+        </div>
+
+        <div class="card form-card">
+          <h3 class="form-title">{{ 'profile.edit' | t }}</h3>
+          <div class="form-grid">
+            <div class="field">
+              <label for="firstName">{{ 'profile.firstName' | t }}</label>
+              <input id="firstName" class="input" type="text" [(ngModel)]="firstName" />
+            </div>
+            <div class="field">
+              <label for="lastName">{{ 'profile.lastName' | t }}</label>
+              <input id="lastName" class="input" type="text" [(ngModel)]="lastName" />
+            </div>
+            <div class="field span-2">
+              <label for="email">{{ 'profile.email' | t }}</label>
+              <input id="email" class="input" type="email" [(ngModel)]="email" />
+            </div>
+            <div class="field span-2 readonly">
+              <label>{{ 'profile.username' | t }}</label>
+              <div class="input readonly">{{ profile?.username || '-' }}</div>
+            </div>
+          </div>
+          <div class="actions">
+            <button
+              pButton
+              type="button"
+              [label]="'common.save' | t"
+              icon="pi pi-save"
+              class="p-button-sm p-button-rounded"
+              (click)="save()"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Middle spacer (lg only visual gutter) -->
+    <div class="col-12 lg:col-3"></div>
+
+    <!-- Settings (right) -->
+    <div class="col-12 lg:col-5">
+      <app-settings></app-settings>
+    </div>
+
+    <!-- right side left empty for now to match desired layout -->
+  </div>
+</section>
+<div class="profile-copyright" aria-label="copyright">
+  <span>
+    © <a href="https://a2digitallab.it/" target="_blank" rel="noopener">A2 Digital Lab</a>
+  </span>
+  <span class="sep">•</span>
+  <span class="muted">Tutti i diritti riservati</span>
+</div>

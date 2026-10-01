@@ -1,0 +1,106 @@
+/* Global styles */
+@import 'primeicons/primeicons.css';
+@import 'primeflex/primeflex.css';
+/* PrimeNG 20 uses JS theme presets; no primeng.css import */
+
+/* Theme Variables */
+:root {
+  /* Light mode palette */
+  --color-primary: #2563eb;
+  --color-secondary: #10b981;
+  --color-accent: #f59e0b;
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-border: #e2e8f0;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-disabled: #cbd5e1;
+  --state-none: #94a3b8;
+  --state-contacted: #10b981;
+  --state-follow1: #f59e0b;
+  --state-follow2: #d97706;
+  --state-rejected: #ef4444;
+
+  /* Derived tokens for the app (compat layer) */
+  --bg: var(--color-bg);
+  --fg: var(--color-text-primary);
+  --panel: var(--color-surface);
+  --border: var(--color-border);
+  --panel-head: color-mix(in srgb, var(--color-text-primary) 5%, var(--color-surface));
+  --row-hover: color-mix(in srgb, var(--color-text-primary) 3%, var(--color-surface));
+  --sidebar-inner: var(--color-surface);
+  --icon-color: var(--color-text-secondary);
+  --icon-active: var(--color-text-primary);
+  --active-bg: var(--color-primary);
+  --shadow-color: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+/* Centered page title style */
+.page__title {
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  margin: 0 0 1rem 0;
+  position: relative;
+}
+
+.page__title::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 3px;
+  margin: 0.5rem auto 0;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--color-primary) 75%, transparent);
+}
+
+html, body {
+  height: 100dvh;
+  overflow: hidden;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* Dark mode overrides via data-theme */
+[data-theme="dark"] {
+  --color-primary: #3b82f6;
+  --color-secondary: #22c55e;
+  --color-accent: #fbbf24;
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-border: #334155;
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-disabled: #475569;
+  --state-none: #64748b;
+  --state-contacted: #22c55e;
+  --state-follow1: #fbbf24;
+  --state-follow2: #f59e0b;
+  --state-rejected: #f87171;
+
+  --bg: var(--color-bg);
+  --fg: var(--color-text-primary);
+  --panel: var(--color-surface);
+  --border: var(--color-border);
+  --panel-head: color-mix(in srgb, var(--color-text-primary) 8%, var(--color-surface));
+  --row-hover: color-mix(in srgb, var(--color-text-primary) 6%, var(--color-surface));
+  --sidebar-inner: var(--color-surface);
+  --icon-color: var(--color-text-secondary);
+  --icon-active: var(--color-text-primary);
+  --active-bg: var(--color-primary);
+}
+
+/* (Removed) custom DataTable theme */
+
+/* Partner dialog (global) */
+.p-dialog.partner-dialog { width: 960px !important; max-width: 95vw !important; background: var(--panel) !important; border: 1px solid var(--border) !important; border-radius: 12px !important; box-shadow: var(--shadow-color); }
+.partner-dialog .p-dialog-header, .partner-dialog .p-dialog-content { background: var(--panel) !important; }
+.partner-dialog .p-dialog-header { border-bottom: 1px solid var(--border) !important; }
+.partner-dialog .p-dialog-title { color: var(--fg) !important; }
+.partner-dialog .p-dialog-header .p-dialog-header-icon { color: var(--icon-color) !important; }
+.partner-dialog .p-dialog-header .p-dialog-header-icon:hover { color: var(--icon-active) !important; }
+.partner-dialog-mask { backdrop-filter: blur(6px) !important; background: color-mix(in srgb, var(--fg) 8%, transparent) !important; }

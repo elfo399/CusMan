@@ -1,5 +1,7 @@
 # InfraCusMan
 
+Repository unico: `frontend/`, `backend/` e infrastruttura sono tutti versionati direttamente qui, senza submodule. Per clonare basta `git clone https://github.com/elfo399/InfraCusMan.git`.
+
 Gestione contatti/clienti e partner con autenticazione Keycloak, analisi, import/export e uno scraper da Google Places. Monorepo con frontend Angular, backend Express, Keycloak, MySQL e Redis orchestrati via Docker.
 
 —
@@ -67,7 +69,7 @@ File `.env` (root) per il backend (compose setta automaticamente i parametri DB/
 - `GOOGLE_PLACES_KEY`: chiave Google Places usata dallo scraper (fallback globale; per-utente si salva in Keycloak Attributes).
 - `HUNTER_KEY`: opzionale, per arricchimento email (endpoint `/v1/enrich-contacts`).
 
-Frontend: la chiave Google Maps usata per il widget mappa è definita in `fe/src/environments/` (limita la chiave per referer in produzione).
+Frontend: la chiave Google Maps usata per il widget mappa è definita in `frontend/src/environments/` (limita la chiave per referer in produzione).
 
 ## API e documentazione
 
@@ -96,8 +98,8 @@ Endpoint principali (estratto):
 
 Opzionale, per chi preferisce avviare i servizi localmente:
 - MySQL e Redis locali (crea i DB con `sql/init` oppure avvia `scripts/first-run.*`).
-- Backend: `cd be && npm install && npm run dev` (porta 3000).
-- Frontend: `cd fe && npm install && npm start` (porta 4200, API su http://localhost:3000/api).
+- Backend: `cd backend && npm install && npm run dev` (porta 3000).
+- Frontend: `cd frontend && npm install && npm start` (porta 4200, API su http://localhost:3000/api).
 
 ## Sicurezza e note operative
 
@@ -110,8 +112,8 @@ Opzionale, per chi preferisce avviare i servizi localmente:
 
 ```
 .
-├─ fe/                 # Frontend Angular + Nginx (Docker)
-├─ be/                 # Backend Express (ESM) + Swagger
+├─ frontend/                 # Frontend Angular + Nginx (Docker)
+├─ backend/                 # Backend Express (ESM) + Swagger
 ├─ keycloak/           # Tema login + realm JSON
 ├─ sql/init/           # Schema iniziale e seed
 ├─ scripts/            # Script di avvio, backup/restore, redeploy

@@ -1,0 +1,269 @@
+<section class="page">
+  <h2 class="page__title">{{ 'nav.clients' | t }}</h2>
+
+  <!-- Azioni in alto: nascoste se lista vuota per evitare layout vuoto -->
+  <div class="actions" *ngIf="items && items.length" style="margin-bottom: 1rem; display:flex; justify-content:space-between; align-items:center; gap:.5rem;">
+    <div></div>
+    <button type="button" class="text-btn action-add" (click)="openCreate()">
+      <i class="pi pi-plus"></i>
+      <span>{{ 'clients.addRecord' | t }}</span>
+    </button>
+    <div style="display:flex; align-items:center; gap:8px; margin-left:auto;">
+      <span class="page-indicator">{{ page }} {{ 'common.of' | t }} {{ hasTotal ? totalPages : '?' }}</span>
+      <button type="button" class="text-btn" (click)="prevPage()" [disabled]="page===1"><i class="pi pi-angle-left"></i></button>
+      <button type="button" class="text-btn" (click)="nextPage()" [disabled]="!hasNext"><i class="pi pi-angle-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Stato: caricamento / errore -->
+  <div class="placeholder" *ngIf="loading">{{ 'common.loading' | t }}</div>
+  <div class="placeholder" *ngIf="!loading && error">{{ 'clients.errorLoadingPartners' | t }}</div>
+
+  <!-- Stato: lista vuota -->
+  <div class="empty-state" *ngIf="!loading && !error && (!items || !items.length)">
+    <div class="empty-card">
+      <div class="empty-icon">
+        <i class="pi pi-users"></i>
+      </div>
+      <div class="empty-title">{{ 'clients.emptyPartners' | t }}</div>
+      <div class="empty-sub">Inizia creando il tuo primo cliente/partner.</div>
+      <button type="button" class="btn primary big" (click)="openCreate()">
+        <i class="pi pi-plus"></i>
+        <span>{{ 'clients.addRecord' | t }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista -->
+  <div class="cards" *ngIf="!loading && !error && items && items.length" [ngStyle]="{'--clients-grid-cols': gridCols}">
+    <div class="card" *ngFor="let it of items" (click)="open(it)" tabindex="0">
+      <div class="card__head">
+        <div class="card__title">{{ it.name }}</div>
+        <div class="card__status">{{ it.status || '-' }}</div>
+      </div>
+      <div class="card__meta">
+        <div class="row"><span class="label">{{ 'partner.assigned' | t }}</span><span class="value"><b>{{ it.assign || '-' }}</b></span></div>
+        <div class="row"><span class="label">{{ 'partner.domain' | t }}</span><span class="value"><b>{{ it.domain || '-' }}</b></span></div>
+        <div class="row"><span class="label">{{ 'partner.website' | t }}</span><span class="value"><b>{{ it.site || '-' }}</b></span></div>
+        <div class="row"><span class="label">{{ 'partner.renewDate' | t }}</span><span class="value"><b>{{ it.renew_date || '-' }}</b></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dettaglio + modifica/elimina -->
+  <p-dialog
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: '1120px', maxWidth: '95vw' }"
+    [contentStyle]="{ 'height': '560px', 'max-height': '560px', 'min-height': '560px', 'overflow': 'auto' }"
+    styleClass="partner-dialog"
+    [maskStyleClass]="'partner-dialog-mask'"
+    [dismissableMask]="true"
+    [closable]="true"
+    [closeOnEscape]="true"
+    [(visible)]="showDetail"
+    (onHide)="closeDetail()"
+    [header]="selected?.name || ('clients.partnerDetails' | t)"
+  >
+    <ng-container *ngIf="selected as d">
+
+      <div class="tabs" [class.hide-map-tab]="!hasAddressOrCoords(editing ? editData : d)">
+        <button class="tab" [class.active]="activeTab==='gen'" (click)="activeTab='gen'">🧾 {{ 'tabs.general' | t }}</button>
+        <button class="tab" [class.active]="activeTab==='tech'" (click)="activeTab='tech'">🛠️ {{ 'tabs.technical' | t }}</button>
+        <button class="tab" [class.active]="activeTab==='eco'" (click)="activeTab='eco'">💶 {{ 'tabs.economic' | t }}</button>
+        <button class="tab" [class.active]="activeTab==='map'" (click)="activeTab='map'">🗺️ {{ 'tabs.map' | t }}</button>
+        <button class="tab" [class.active]="activeTab==='proj'" (click)="activeTab='proj'">📁 {{ 'tabs.project' | t }}</button>
+        <span class="tabs__spacer"></span>
+        <!-- Azioni nella navbar con emoji + testo -->
+        <button pButton type="button" size="small" label="✏️ Modifica" class="p-button-text" (click)="startEdit()" *ngIf="!editing"></button>
+        <button pButton type="button" size="small" label="🗑️ Elimina" class="p-button-text p-button-danger" (click)="openConfirmDelete()" *ngIf="!editing"></button>
+        <button pButton type="button" size="small" label="💾 Salva" class="p-button-success" (click)="prepareConfirmSave()" *ngIf="editing"></button>
+        <button pButton type="button" size="small" label="✖️ Annulla" class="p-button-secondary" (click)="cancelEdit()" *ngIf="editing"></button>
+      </div>
+
+      <div *ngIf="activeTab==='gen'" class="detail__section">
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.referent' | t }}</span><b>{{ d.referent || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.referent' | t }}</span><input type="text" [(ngModel)]="editData.referent"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.email' | t }}</span><b>{{ d.email || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.email' | t }}</span><input type="email" [(ngModel)]="editData.email"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.phone' | t }}</span><b>{{ d.phone || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.phone' | t }}</span><input type="text" [(ngModel)]="editData.phone"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.address' | t }}</span><b>{{ d.address || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.address' | t }}</span><input type="text" [(ngModel)]="editData.address"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.website' | t }}</span><b>
+          <ng-container *ngIf="d.site; else noSite"><a [href]="d.site" target="_blank" rel="noopener">{{ d.site }}</a></ng-container>
+          <ng-template #noSite>-</ng-template>
+        </b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.website' | t }}</span><input type="text" [(ngModel)]="editData.site"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.assigned' | t }}</span><b>{{ d.assign || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.assigned' | t }}</span>
+          <select [(ngModel)]="editData.assign">
+            <option [ngValue]="null">Nessuno</option>
+            <option *ngFor="let u of userOptions" [ngValue]="u.value">{{ u.label }}</option>
+          </select>
+        </div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.status' | t }}</span><b>{{ d.status || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.status' | t }}</span>
+          <select [(ngModel)]="editData.status">
+            <option *ngFor="let s of statusOptions" [ngValue]="s">{{ s }}</option>
+          </select>
+        </div>
+        <div class="kv" *ngIf="editing"><span>Nome</span><input type="text" [(ngModel)]="editData.name"></div>
+      </div>
+
+      <div *ngIf="activeTab==='tech'" class="detail__section">
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.domain' | t }}</span><b>{{ d.domain || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.domain' | t }}</span><input type="text" [(ngModel)]="editData.domain"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.domainExpiry' | t }}</span><b>{{ d.domain_expiry || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.domainExpiry' | t }}</span><input type="date" [(ngModel)]="editData.domain_expiry"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.hosting' | t }}</span><b>{{ d.hosting_provider || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.hosting' | t }}</span><input type="text" [(ngModel)]="editData.hosting_provider"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.hostingExpiry' | t }}</span><b>{{ d.hosting_expiry || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.hostingExpiry' | t }}</span><input type="date" [(ngModel)]="editData.hosting_expiry"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.sslExpiry' | t }}</span><b>{{ d.ssl_expiry || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.sslExpiry' | t }}</span><input type="date" [(ngModel)]="editData.ssl_expiry"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.panel' | t }}</span><b>
+          <ng-container *ngIf="d.panel_url; else noPanel"><a [href]="d.panel_url" target="_blank" rel="noopener">{{ d.panel_url }}</a></ng-container>
+          <ng-template #noPanel>-</ng-template>
+        </b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.panel' | t }}</span><input type="text" [(ngModel)]="editData.panel_url"></div>
+      </div>
+
+      <div *ngIf="activeTab==='eco'" class="detail__section">
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.price' | t }}</span><b>{{ d.price != null ? (d.price + ' €') : '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.price' | t }}</span><input type="number" step="0.01" [(ngModel)]="editData.price"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.renewDate' | t }}</span><b>{{ d.renew_date || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.renewDate' | t }}</span><input type="date" [(ngModel)]="editData.renew_date"></div>
+      </div>
+
+      <div *ngIf="activeTab==='map' && hasAddressOrCoords(editing ? editData : d)" class="detail__section">
+        <iframe class="map-embed" [src]="getMapEmbedUrlFor(useCoordsEdit ? editData : d, useCoordsEdit)" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="kv" style="margin-top:8px; align-items:center;">
+          <span>Usare coordinate GPS</span>
+          <label style="display:inline-flex; align-items:center; gap:8px;">
+            <input type="checkbox"
+                   [(ngModel)]="useCoordsEdit"
+                   (ngModelChange)="onUseGpsToggle($event)"
+                   [disabled]="!editing"
+                   [title]="editing ? '' : ('common.editToChange' | t)" />
+          </label>
+        </div>
+        <!-- Coordinate: visualizza testo fuori dall'edit; input in edit -->
+        <div *ngIf="useCoordsEdit">
+          <div class="kv" *ngIf="!editing"><span>Latitudine</span><b>{{ d.latitude || '-' }}</b></div>
+          <div class="kv" *ngIf="editing"><span>Latitudine</span><input type="text" placeholder="es. 41.123456" [(ngModel)]="editData.latitude" [ngModelOptions]="{ standalone: true }" /></div>
+          <div class="kv" *ngIf="!editing"><span>Longitudine</span><b>{{ d.longitude || '-' }}</b></div>
+          <div class="kv" *ngIf="editing"><span>Longitudine</span><input type="text" placeholder="es. 16.987654" [(ngModel)]="editData.longitude" [ngModelOptions]="{ standalone: true }" /></div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab==='proj'" class="detail__section">
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.startDate' | t }}</span><b>{{ d.data_start || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.startDate' | t }}</span><input type="date" [(ngModel)]="editData.data_start"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.endDate' | t }}</span><b>{{ d.data_end || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.endDate' | t }}</span><input type="date" [(ngModel)]="editData.data_end"></div>
+        <div class="kv" *ngIf="!editing"><span>{{ 'partner.notes' | t }}</span><b>{{ d.note || '-' }}</b></div>
+        <div class="kv" *ngIf="editing"><span>{{ 'partner.notes' | t }}</span><textarea [(ngModel)]="editData.note"></textarea></div>
+      </div>
+    </ng-container>
+  </p-dialog>
+
+  <!-- Conferma salvataggio con riepilogo modifiche -->
+  <p-dialog [(visible)]="showConfirmSave" [modal]="true" [style]="{ width: '520px', maxWidth: '95vw' }" [draggable]="false" [resizable]="false" [header]="'Conferma salvataggio'">
+    <div>
+      <p>Stai per salvare le seguenti modifiche:</p>
+      <ul>
+        <li *ngFor="let c of changes">{{ fieldLabel(c.key) }}: <b>{{ c.from || '-' }}</b> → <b>{{ c.to || '-' }}</b></li>
+      </ul>
+      <div style="display:flex; justify-content:flex-end; gap:.5rem; margin-top:.75rem;">
+        <button pButton type="button" label="Annulla" class="p-button-secondary" (click)="showConfirmSave=false"></button>
+        <button pButton type="button" label="Conferma" icon="pi pi-check" class="p-button-success" (click)="proceedSaveEdit()"></button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <!-- Conferma eliminazione -->
+  <p-dialog [(visible)]="showConfirmDelete" [modal]="true" [style]="{ width: '480px', maxWidth: '95vw' }" [draggable]="false" [resizable]="false" [header]="'Conferma eliminazione'">
+    <div>
+      <p>Eliminare definitivamente <b>{{ selected?.name }}</b>?</p>
+      <div style="display:flex; justify-content:flex-end; gap:.5rem; margin-top:.75rem;">
+        <button pButton type="button" label="Annulla" class="p-button-secondary" (click)="cancelDelete()"></button>
+        <button pButton type="button" label="Elimina" icon="pi pi-trash" class="p-button-danger" (click)="proceedDelete()"></button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <!-- Creazione -->
+  <p-dialog
+    [(visible)]="showCreate"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: '1120px', maxWidth: '95vw' }"
+    [contentStyle]="{ 'height': '560px', 'max-height': '560px', 'min-height': '560px', 'overflow': 'auto' }"
+    styleClass="partner-dialog"
+    [header]="'Nuovo cliente'"
+  >
+    <div class="tabs">
+      <button class="tab" [class.active]="createActiveTab==='gen'" (click)="createActiveTab='gen'">🧾 Generale</button>
+      <button class="tab" [class.active]="createActiveTab==='tech'" (click)="createActiveTab='tech'">🛠️ Tecnico</button>
+      <button class="tab" [class.active]="createActiveTab==='eco'" (click)="createActiveTab='eco'">💶 Economica</button>
+      <button class="tab" [class.active]="createActiveTab==='map'" (click)="createActiveTab='map'">🗺️ Mappa</button>
+      <button class="tab" [class.active]="createActiveTab==='proj'" (click)="createActiveTab='proj'">📁 Progetto</button>
+    </div>
+
+    <div *ngIf="createActiveTab==='gen'" class="detail__section">
+      <div class="kv"><span>Nome*</span><input type="text" [(ngModel)]="createData.name" /></div>
+      <div class="kv"><span>Referente</span><input type="text" [(ngModel)]="createData.referent" /></div>
+      <div class="kv"><span>Email</span><input type="email" [(ngModel)]="createData.email" /></div>
+      <div class="kv"><span>Telefono</span><input type="text" [(ngModel)]="createData.phone" /></div>
+      <div class="kv"><span>Indirizzo</span><input type="text" [(ngModel)]="createData.address" /></div>
+      <div class="kv"><span>Sito</span><input type="text" [(ngModel)]="createData.site" /></div>
+      <div class="kv"><span>Assegnato</span>
+        <select [(ngModel)]="createData.assign">
+          <option [ngValue]="null">Nessuno</option>
+          <option *ngFor="let u of userOptions" [ngValue]="u.value">{{ u.label }}</option>
+        </select>
+      </div>
+      <div class="kv"><span>Stato</span>
+        <select [(ngModel)]="createData.status">
+          <option *ngFor="let s of statusOptions" [ngValue]="s">{{ s }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="createActiveTab==='tech'" class="detail__section">
+      <div class="kv"><span>Dominio</span><input type="text" [(ngModel)]="createData.domain" /></div>
+      <div class="kv"><span>Scadenza dominio</span><input type="date" [(ngModel)]="createData.domain_expiry" /></div>
+      <div class="kv"><span>Provider hosting</span><input type="text" [(ngModel)]="createData.hosting_provider" /></div>
+      <div class="kv"><span>Scadenza hosting</span><input type="date" [(ngModel)]="createData.hosting_expiry" /></div>
+      <div class="kv"><span>Scadenza SSL</span><input type="date" [(ngModel)]="createData.ssl_expiry" /></div>
+      <div class="kv"><span>URL pannello</span><input type="text" [(ngModel)]="createData.panel_url" /></div>
+    </div>
+
+    <div *ngIf="createActiveTab==='eco'" class="detail__section">
+      <div class="kv"><span>Prezzo €</span><input type="number" step="0.01" [(ngModel)]="createData.price" /></div>
+      <div class="kv"><span>Data rinnovo</span><input type="date" [(ngModel)]="createData.renew_date" /></div>
+    </div>
+
+    <div *ngIf="createActiveTab==='map'" class="detail__section">
+      <iframe class="map-embed" [src]="getMapEmbedUrlFor(createData, true)" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="create-grid" style="margin-top:8px;">
+        <label><span>Latitudine</span><input type="text" placeholder="es. 41.123456" [(ngModel)]="createData.latitude" [ngModelOptions]="{ standalone: true }" /></label>
+        <label><span>Longitudine</span><input type="text" placeholder="es. 16.987654" [(ngModel)]="createData.longitude" [ngModelOptions]="{ standalone: true }" /></label>
+      </div>
+    </div>
+
+    <div *ngIf="createActiveTab==='proj'" class="detail__section">
+      <div class="kv"><span>Data inizio</span><input type="date" [(ngModel)]="createData.data_start" /></div>
+      <div class="kv"><span>Data fine</span><input type="date" [(ngModel)]="createData.data_end" /></div>
+      <div class="kv"><span>Note</span><textarea rows="3" [(ngModel)]="createData.note"></textarea></div>
+    </div>
+    <div class="dialog-actions">
+      <button type="button" class="btn ghost" (click)="cancelCreate()">Annulla</button>
+      <button type="button" class="btn primary" [disabled]="creating || !createData.name || !createData.name.trim()" (click)="doCreate()">Crea</button>
+    </div>
+  </p-dialog>
+
+</section>

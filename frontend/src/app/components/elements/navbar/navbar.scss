@@ -1,0 +1,133 @@
+﻿@use "sass:color";
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.sidebar {
+  height: 100%;
+  width: 80px;
+  background: var(--sidebar-inner);
+  border-radius: 16px;
+  margin: 0; /* no external margin to avoid overflow */
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar__top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.sidebar__bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.sidebar__divider {
+  width: 40px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-border);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.15), 0 -1px 0 rgba(255,255,255,0.06) inset;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--icon-color);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.1s ease;
+
+  i {
+    font-size: 1.15rem;
+  }
+
+  &:hover {
+    color: var(--fg);
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    background: var(--active-bg);
+    color: var(--icon-active);
+
+    i {
+      color: var(--icon-active);
+    }
+  }
+}
+
+.icon-btn.brand,
+.brand {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  overflow: hidden;
+  /* Gradiente ispirato all'immagine: viola -> corallo */
+  /* Forza il gradiente anche se altri stili impostano uno sfondo */
+  background: linear-gradient(135deg,
+    #8b5cf6 0%,   /* violet */
+    #b983f9 40%,  /* violet/pink */
+    #f48a7a 100%  /* coral */
+  ) !important;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow:
+    0 10px 28px rgba(139,92,246,.28), /* violet glow */
+    inset 0 -6px 12px rgba(0,0,0,.25);
+  color: #ffffff;
+  img {
+    width: 42px;
+    height: auto;
+    display: block;
+    /* Forza il logo bianco nella navbar */
+    filter: brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,.35));
+  }
+  &::before {
+    /* Rimosso effetto lucido per avere un'icona piena */
+    content: none;
+  }
+  &:hover {
+    box-shadow:
+      0 12px 32px rgba(139,92,246,.40),
+      inset 0 -6px 12px rgba(0,0,0,.22);
+    transform: translateY(-1px);
+  }
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--fg);
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  overflow: hidden;
+  img { width: 100%; height: 100%; object-fit: cover; display: block; }
+}
